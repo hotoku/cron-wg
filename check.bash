@@ -7,11 +7,6 @@ LOG_FILE="${SCRIPT_DIR}"/cron.log
 LOGS_URL=$(cat "${SCRIPT_DIR}"/credentials/urls.json |jq -r '.logs')
 WARNS_URL=$(cat "${SCRIPT_DIR}"/credentials/urls.json |jq -r '.warnings')
 
-# debug
-echo "LOG_FILE: ${LOG_FILE}"
-echo "LOGS_URL: ${LOGS_URL}"
-echo "WARNS_URL: ${WARNS_URL}"
-
 
 send_message(){
     local msg=$1
@@ -27,26 +22,23 @@ send_message(){
         webhook_url=${LOGS_URL}
     fi
     echo "sending to ${dest} with message: ${msg}" >> "${LOG_FILE}"
-    echo "webhook url: ${webhook_url}" >> "${LOG_FILE}" # debug
+    echo "webhook url: ${webhook_url}" >> "${LOG_FILE}"
     local tmp='{"text": "cron-wg: __MESSAGE__"}'
     local payload=$(echo ${tmp} | sed -e "s/__MESSAGE__/${msg}/")    
-    curl -X POST -H "Content-type: application/json" -d "${payload}" "${webhook_url}" # debug
+    curl -X POST -H "Content-type: application/json" -d "${payload}" "${webhook_url}" >> "${LOG_FILE}" 2>&1
+    echo "" >> "${LOG_FILE}" # curlが末尾の改行を出力しないので追加
 }
 
 date +"%Y-%m-%d %H:%M:%S start checking" >> "${LOG_FILE}"
 
 if ! [[ -f /var/run/wireguard/wg0.name ]]; then
     echo "Wireguard is down" >> "${LOG_FILE}"
+    send_message "Wireguard is down" "warns"
     wg-quick down wg0 >> "${LOG_FILE}" 2>&1
     wg-quick up wg0 >> "${LOG_FILE}" 2>&1
 else
     echo "Wireguard is already up" >> "${LOG_FILE}"
+    send_message "Wireguard is already up" "logs"
 fi
-
-## test
-echo "sending to slack" >> "${LOG_FILE}"
-send_message "from cron-wg" "logs"
-
-
 
 chown hotoku:staff "${LOG_FILE}"
