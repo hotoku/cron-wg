@@ -16,7 +16,9 @@ wg への接続をチェックして、接続が切れていたら再接続す�
 
 ## 導入方法
 
-まず、root の crontab に`check.bash`を定期実行するように設定する。
+### crontab
+
+root の crontab に`check.bash`を定期実行するように設定する。
 
 ```shell
 sudo su -
@@ -31,7 +33,22 @@ vi が立ち上がるので、
 
 を記入する。これで、毎分、`check.bash`が起動する。
 
-次に、ログローテーションの設定をする。`cron-wg.conf`を`/etc/newsyslog.d`にコピーすれば良い。
+### slack incoming webhook
+
+実行時のログを Slack にも送っている。送信先の URL は、`credentials/urls.json`の中に、以下の形式で記述する。
+
+```json
+{
+  "logs": "https://hooks.slack.com/services/XXXXXX",
+  "warnings": "https://hooks.slack.com/services/XXXXXX"
+}
+```
+
+Slack の incoming webhook は、URL が分かると誰でも送信できるので、このファイルは秘密情報として保管する（GitHub に push しない！）。
+
+### ログローテーション
+
+ログローテーションの設定をする。`cron-wg.conf`を`/etc/newsyslog.d`にコピーすれば良い。
 
 ```shell
 sudo cp cron-wg.conf /etc/newsyslog.d
