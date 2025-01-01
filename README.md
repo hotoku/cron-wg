@@ -34,5 +34,5 @@ vi が立ち上がるので、
 次に、ログローテーションの設定をする。`cron-wg.conf`を`/etc/newsyslog.d`にコピーすれば良い。
 
 ```shell
-cp cron-wg.conf /etc/newsyslog.d
+sudo cp cron-wg.conf /etc/newsyslog.d
 ```
