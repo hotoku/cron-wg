@@ -33,12 +33,12 @@ date +"%Y-%m-%d %H:%M:%S start checking" >> "${LOG_FILE}"
 
 if ! [[ -f /var/run/wireguard/wg0.name ]]; then
     echo "Wireguard is down" >> "${LOG_FILE}"
-    send_message "Wireguard is down" "warns"
+    # send_message "Wireguard is down" "warns"
     wg-quick down wg0 >> "${LOG_FILE}" 2>&1
     wg-quick up wg0 >> "${LOG_FILE}" 2>&1
 else
     echo "Wireguard is already up" >> "${LOG_FILE}"
-    send_message "Wireguard is already up" "logs"
+    # send_message "Wireguard is already up" "logs"
 fi
 
 chown hotoku:staff "${LOG_FILE}"
