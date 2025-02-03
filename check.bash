@@ -34,13 +34,22 @@ date +"%Y-%m-%d %H:%M:%S start checking" >> "${LOG_FILE}"
 
 if ! [[ -f /var/run/wireguard/wg0.name ]]; then
     echo "Wireguard is down" >> "${LOG_FILE}"
-    date "+%y-%m-%d %H:%M:%S down" >> "${REPORT_FILE}"
+    REPORT=$(date "+%y-%m-%d %H:%M:%S down")
     wg-quick down wg0 >> "${LOG_FILE}" 2>&1
     wg-quick up wg0 >> "${LOG_FILE}" 2>&1
 else
     echo "Wireguard is already up" >> "${LOG_FILE}"
-    date "+%y-%m-%d %H:%M:%S up" >> "${REPORT_FILE}"
+    REPORT=$(date "+%y-%m-%d %H:%M:%S up")
 fi
+
+
+ping -c 1 10.0.0.1
+if [[ $? -eq 0 ]]; then
+    REPORT="${REPORT} ping ok"
+else
+    REPORT="${REPORT} ping ng"
+fi
+echo "${REPORT}" >> "${REPORT_FILE}"
 
 
 chown hotoku:staff "${REPORT_FILE}"
