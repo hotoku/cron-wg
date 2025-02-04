@@ -43,7 +43,7 @@ else
 fi
 
 
-ping -c 1 10.0.0.1
+/sbin/ping -c 1 10.0.0.1
 if [[ $? -eq 0 ]]; then
     REPORT="${REPORT} ping ok"
 else
