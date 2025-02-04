@@ -56,7 +56,7 @@ chown hotoku:staff "${REPORT_FILE}"
 chown hotoku:staff "${LOG_FILE}"
 
 
-if [[ $(cat "${REPORT_FILE}" | wc -l) -gt 10 ]]; then
+if [[ $(cat "${REPORT_FILE}" | wc -l) -ge 10 ]]; then
     send_message "$(cat "${REPORT_FILE}")" logs
     rm "${REPORT_FILE}"
 fi
