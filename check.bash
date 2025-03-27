@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-export PATH=/opt/homebrew/bin:"$PATH"
+export PATH=/sbin:/usr/sbin:/opt/homebrew/bin:"$PATH"
 
 
 SCRIPT_DIR=$(dirname $(readlink -f $0))
@@ -43,7 +43,7 @@ else
 fi
 
 
-/sbin/ping -c 1 10.0.0.1
+ping -c 1 10.0.0.1
 if [[ $? -eq 0 ]]; then
     REPORT="${REPORT} ping ok"
 else
