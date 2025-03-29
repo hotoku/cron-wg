@@ -9,6 +9,17 @@ LOG_FILE="${SCRIPT_DIR}"/cron.log
 LOGS_URL=$(cat "${SCRIPT_DIR}"/credentials/urls.json |jq -r '.logs')
 REPORT_FILE="${SCRIPT_DIR}"/report.txt
 
+initialiize(){
+    if [[ ! -f "${LOG_FILE}" ]]; then
+        touch "${LOG_FILE}"
+    fi
+
+    if [[ ! -f "${REPORT_FILE}" ]]; then
+        touch "${REPORT_FILE}"
+        echo "${HOST}" > "${REPORT_FILE}"
+    fi
+}
+
 
 send_message(){
     local msg=$1
@@ -28,7 +39,7 @@ send_message(){
     echo "" >> "${LOG_FILE}" # curlが末尾の改行を出力しないので追加
 }
 
-
+initialiize
 date +"%Y-%m-%d %H:%M:%S start checking" >> "${LOG_FILE}"
 
 
@@ -58,5 +69,5 @@ chown hotoku:staff "${LOG_FILE}"
 
 if [[ $(cat "${REPORT_FILE}" | wc -l) -ge 10 ]]; then
     send_message "$(cat "${REPORT_FILE}")" logs
-    rm "${REPORT_FILE}"
+    rm -f "${REPORT_FILE}"
 fi
