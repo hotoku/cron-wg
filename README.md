@@ -39,8 +39,7 @@ vi が立ち上がるので、
 
 ```json
 {
-  "logs": "https://hooks.slack.com/services/XXXXXX",
-  "warnings": "https://hooks.slack.com/services/XXXXXX"
+  "logs": "https://hooks.slack.com/services/XXXXXX"
 }
 ```
 
