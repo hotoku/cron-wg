@@ -15,8 +15,7 @@ initialiize(){
     fi
 
     if [[ ! -f "${REPORT_FILE}" ]]; then
-        touch "${REPORT_FILE}"
-        echo "${HOST}" > "${REPORT_FILE}"
+        echo "${LOGS_URL}" > "${REPORT_FILE}"
     fi
 }
 
@@ -32,7 +31,7 @@ send_message(){
 
     local msg_escaped=$(echo "${msg}" | sed -e ':a' -e 'N' -e '$!ba' -e 's/\n/\\n/g')
     local template='{"text": "__MESSAGE__"}'
-    local payload=$(echo "${template}" | sed -e "s/__MESSAGE__/${msg_escaped}/")
+    local payload=$(echo "${template}" | sed -e "s|__MESSAGE__|${msg_escaped}|")
 
 
     curl -X POST -H "Content-type: application/json" -d "${payload}" "${LOGS_URL}" >> "${LOG_FILE}" 2>&1
